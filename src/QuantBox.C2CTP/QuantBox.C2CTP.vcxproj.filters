@@ -48,6 +48,15 @@
     <ClInclude Include="include\toolkit.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="MdUserApi.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="TraderApi.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CTPMsgQueue.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
     <ClInclude Include="include\CTP\ThostFtdcMdApi.h">
       <Filter>CTP</Filter>
     </ClInclude>
@@ -59,15 +68,6 @@
     </ClInclude>
     <ClInclude Include="include\CTP\ThostFtdcUserApiStruct.h">
       <Filter>CTP</Filter>
-    </ClInclude>
-    <ClInclude Include="MdUserApi.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="TraderApi.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="CTPMsgQueue.h">
-      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

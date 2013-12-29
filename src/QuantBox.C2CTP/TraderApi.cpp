@@ -3,6 +3,7 @@
 #include "CTPMsgQueue.h"
 #include "include\toolkit.h"
 #include "include\Lock.h"
+#include <fstream>
 
 CTraderApi::CTraderApi(void)
 {
@@ -558,6 +559,7 @@ void CTraderApi::OnErrRtnOrderInsert(CThostFtdcInputOrderField *pInputOrder, CTh
 
 void CTraderApi::OnRtnTrade(CThostFtdcTradeField *pTrade)
 {
+	puts("on return trade");
 	if(m_msgQueue)
 		m_msgQueue->Input_OnRtnTrade(this,pTrade);
 }
@@ -611,6 +613,10 @@ void CTraderApi::OnErrRtnOrderAction(CThostFtdcOrderActionField *pOrderAction, C
 
 void CTraderApi::OnRtnOrder(CThostFtdcOrderField *pOrder)
 {
+	ofstream myfile;
+	myfile.open ("C:\\logs\\log_order.txt", std::ofstream::out | std::ofstream::app);
+	myfile <<pOrder->InstrumentID<<" "<<pOrder->InsertTime<<"cpp api on return orderr\n";
+	myfile.close();
 	if(m_msgQueue)
 		m_msgQueue->Input_OnRtnOrder(this,pOrder);
 }
