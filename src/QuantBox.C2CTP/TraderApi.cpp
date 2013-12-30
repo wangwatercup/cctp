@@ -614,7 +614,7 @@ void CTraderApi::OnErrRtnOrderAction(CThostFtdcOrderActionField *pOrderAction, C
 void CTraderApi::OnRtnOrder(CThostFtdcOrderField *pOrder)
 {
 	ofstream myfile;
-	myfile.open ("C:\\logs\\log_order.txt", std::ofstream::out | std::ofstream::app);
+	myfile.open (".\\logs\\log_order.txt", std::ofstream::out | std::ofstream::app);
 	myfile <<pOrder->InstrumentID<<" "<<pOrder->InsertTime<<"cpp api on return orderr\n";
 	myfile.close();
 	if(m_msgQueue)
