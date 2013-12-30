@@ -49,7 +49,9 @@ bool CTraderApi::IsErrorRspInfo(CThostFtdcRspInfoField *pRspInfo, int nRequestID
 	if(bRet)
 	{
 		if(m_msgQueue)
-			m_msgQueue->Input_OnRspError(this,pRspInfo,nRequestID,bIsLast);
+		{
+			(*m_msgQueue->m_fnOnRspError)(this,pRspInfo,nRequestID,bIsLast);
+		}
 	}
 	return bRet;
 }
@@ -85,7 +87,7 @@ void CTraderApi::Connect(const string& szPath,
 
 	m_status = E_inited;
 	if(m_msgQueue)
-		m_msgQueue->Input_OnConnect(this,NULL,m_status);
+		(*m_msgQueue->m_fnOnConnect)(this,NULL,m_status);
 	
 	if (m_pApi)
 	{
@@ -114,7 +116,7 @@ void CTraderApi::Connect(const string& szPath,
 		m_pApi->Init();
 		m_status = E_connecting;
 		if(m_msgQueue)
-			m_msgQueue->Input_OnConnect(this,NULL,m_status);
+			(*m_msgQueue->m_fnOnConnect)(this,NULL,m_status);
 	}
 }
 
@@ -131,7 +133,7 @@ void CTraderApi::Disconnect()
 		m_pApi = NULL;
 
 		if(m_msgQueue)
-			m_msgQueue->Input_OnDisconnect(this,NULL,m_status);
+			(*m_msgQueue->m_fnOnDisconnect)(this,NULL,m_status);
 	}
 
 	m_lRequestID = 0;//由于线程已经停止，没有必要用原子操作了
@@ -312,7 +314,7 @@ void CTraderApi::OnFrontConnected()
 {
 	m_status =  E_connected;
 	if(m_msgQueue)
-		m_msgQueue->Input_OnConnect(this,NULL,m_status);
+		(*m_msgQueue->m_fnOnConnect)(this,NULL,m_status);
 
 	//连接成功后自动请求认证或登录
 	if(m_szAuthCode.length()>0
@@ -336,7 +338,7 @@ void CTraderApi::OnFrontDisconnected(int nReason)
 	GetOnFrontDisconnectedMsg(&RspInfo);
 
 	if(m_msgQueue)
-		m_msgQueue->Input_OnDisconnect(this,&RspInfo,m_status);
+		(*m_msgQueue->m_fnOnDisconnect)(this,&RspInfo,m_status);
 }
 
 void CTraderApi::ReqAuthenticate()
@@ -349,7 +351,7 @@ void CTraderApi::ReqAuthenticate()
 	{
 		m_status = E_authing;
 		if(m_msgQueue)
-			m_msgQueue->Input_OnConnect(this,NULL,m_status);
+			(*m_msgQueue->m_fnOnConnect)(this,NULL,m_status);
 
 		CThostFtdcReqAuthenticateField& body = pRequest->ReqAuthenticateField;
 
@@ -369,7 +371,7 @@ void CTraderApi::OnRspAuthenticate(CThostFtdcRspAuthenticateField *pRspAuthentic
 	{
 		m_status = E_authed;
 		if(m_msgQueue)
-			m_msgQueue->Input_OnConnect(this,NULL,m_status);
+			(*m_msgQueue->m_fnOnConnect)(this,NULL,m_status);
 
 		ReqUserLogin();
 	}
@@ -377,7 +379,7 @@ void CTraderApi::OnRspAuthenticate(CThostFtdcRspAuthenticateField *pRspAuthentic
 	{
 		m_status = E_connected;
 		if(m_msgQueue)
-			m_msgQueue->Input_OnDisconnect(this,pRspInfo,E_authing);
+			(*m_msgQueue->m_fnOnDisconnect)(this,pRspInfo,E_authing);
 	}
 
 	if (bIsLast)
@@ -394,7 +396,7 @@ void CTraderApi::ReqUserLogin()
 	{
 		m_status = E_logining;
 		if(m_msgQueue)
-			m_msgQueue->Input_OnConnect(this,NULL,m_status);
+			(*m_msgQueue->m_fnOnConnect)(this,NULL,m_status);
 
 		CThostFtdcReqUserLoginField& body = pRequest->ReqUserLoginField;
 
@@ -414,7 +416,7 @@ void CTraderApi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CTho
 	{
 		m_status = E_logined;
 		if(m_msgQueue)
-			m_msgQueue->Input_OnConnect(this,pRspUserLogin,m_status);
+			(*m_msgQueue->m_fnOnConnect)(this,pRspUserLogin,m_status);
 		
 		memcpy(&m_RspUserLogin,pRspUserLogin,sizeof(CThostFtdcRspUserLoginField));
 		m_nMaxOrderRef = atol(pRspUserLogin->MaxOrderRef);
@@ -424,7 +426,7 @@ void CTraderApi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CTho
 	{
 		m_status = E_authed;
 		if(m_msgQueue)
-			m_msgQueue->Input_OnDisconnect(this,pRspInfo,E_logining);
+			(*m_msgQueue->m_fnOnDisconnect)(this,pRspInfo,E_logining);
 	}
 
 	if (bIsLast)
@@ -441,7 +443,7 @@ void CTraderApi::ReqSettlementInfoConfirm()
 	{
 		m_status = E_confirming;
 		if(m_msgQueue)
-			m_msgQueue->Input_OnConnect(this,NULL,m_status);
+			(*m_msgQueue->m_fnOnConnect)(this,NULL,m_status);
 
 		CThostFtdcSettlementInfoConfirmField& body = pRequest->SettlementInfoConfirmField;
 
@@ -459,13 +461,13 @@ void CTraderApi::OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField
 	{
 		m_status = E_confirmed;
 		if(m_msgQueue)
-			m_msgQueue->Input_OnConnect(this,NULL,m_status);
+			(*m_msgQueue->m_fnOnConnect)(this,NULL,m_status);
 	}
 	else
 	{
 		m_status = E_logined;
 		if(m_msgQueue)
-			m_msgQueue->Input_OnDisconnect(this,pRspInfo,E_confirming);
+			(*m_msgQueue->m_fnOnDisconnect)(this,pRspInfo,E_confirming);
 	}
 
 	if (bIsLast)
@@ -548,20 +550,20 @@ int CTraderApi::ReqOrderInsert(
 void CTraderApi::OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
 	if(m_msgQueue)
-		m_msgQueue->Input_OnRspOrderInsert(this,pInputOrder,pRspInfo,nRequestID,bIsLast);
+		(*m_msgQueue->m_fnOnRspOrderInsert)(this,pInputOrder,pRspInfo,nRequestID,bIsLast);
 }
 
 void CTraderApi::OnErrRtnOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo)
 {
 	if(m_msgQueue)
-		m_msgQueue->Input_OnErrRtnOrderInsert(this,pInputOrder,pRspInfo);
+		(*m_msgQueue->m_fnOnErrRtnOrderInsert)(this,pInputOrder,pRspInfo);
 }
 
 void CTraderApi::OnRtnTrade(CThostFtdcTradeField *pTrade)
 {
 	puts("on return trade");
 	if(m_msgQueue)
-		m_msgQueue->Input_OnRtnTrade(this,pTrade);
+		(*m_msgQueue->m_fnOnRtnTrade)(this,pTrade);
 }
 
 void CTraderApi::ReqOrderAction(CThostFtdcOrderField *pOrder)
@@ -602,13 +604,13 @@ void CTraderApi::ReqOrderAction(CThostFtdcOrderField *pOrder)
 void CTraderApi::OnRspOrderAction(CThostFtdcInputOrderActionField *pInputOrderAction, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
 	if(m_msgQueue)
-		m_msgQueue->Input_OnRspOrderAction(this,pInputOrderAction,pRspInfo,nRequestID,bIsLast);
+		(*m_msgQueue->m_fnOnRspOrderAction)(this,pInputOrderAction,pRspInfo,nRequestID,bIsLast);
 }
 
 void CTraderApi::OnErrRtnOrderAction(CThostFtdcOrderActionField *pOrderAction, CThostFtdcRspInfoField *pRspInfo)
 {
 	if(m_msgQueue)
-		m_msgQueue->Input_OnErrRtnOrderAction(this,pOrderAction,pRspInfo);
+		(*m_msgQueue->m_fnOnErrRtnOrderAction)(this,pOrderAction,pRspInfo);
 }
 
 void CTraderApi::OnRtnOrder(CThostFtdcOrderField *pOrder)
@@ -618,7 +620,9 @@ void CTraderApi::OnRtnOrder(CThostFtdcOrderField *pOrder)
 	myfile <<pOrder->InstrumentID<<" "<<pOrder->InsertTime<<"cpp api on return orderr\n";
 	myfile.close();
 	if(m_msgQueue)
-		m_msgQueue->Input_OnRtnOrder(this,pOrder);
+	{
+		(* m_msgQueue->m_fnOnRtnOrder)(this,pOrder);
+	}
 }
 
 void CTraderApi::ReqQryTradingAccount()
@@ -641,7 +645,7 @@ void CTraderApi::ReqQryTradingAccount()
 void CTraderApi::OnRspQryTradingAccount(CThostFtdcTradingAccountField *pTradingAccount, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
 	if(m_msgQueue)
-		m_msgQueue->Input_OnRspQryTradingAccount(this,pTradingAccount,pRspInfo,nRequestID,bIsLast);
+		(*m_msgQueue->m_fnOnRspQryTradingAccount)(this,pTradingAccount,pRspInfo,nRequestID,bIsLast);
 
 	if (bIsLast)
 		ReleaseRequestMapBuf(nRequestID);
@@ -668,7 +672,7 @@ void CTraderApi::ReqQryInvestorPosition(const string& szInstrumentId)
 void CTraderApi::OnRspQryInvestorPosition(CThostFtdcInvestorPositionField *pInvestorPosition, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
 	if(m_msgQueue)
-		m_msgQueue->Input_OnRspQryInvestorPosition(this,pInvestorPosition,pRspInfo,nRequestID,bIsLast);
+		(*m_msgQueue->m_fnOnRspQryInvestorPosition)(this,pInvestorPosition,pRspInfo,nRequestID,bIsLast);
 
 	if (bIsLast)
 		ReleaseRequestMapBuf(nRequestID);
@@ -695,7 +699,7 @@ void CTraderApi::ReqQryInvestorPositionDetail(const string& szInstrumentId)
 void CTraderApi::OnRspQryInvestorPositionDetail(CThostFtdcInvestorPositionDetailField *pInvestorPositionDetail, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
 	if(m_msgQueue)
-		m_msgQueue->Input_OnRspQryInvestorPositionDetail(this,pInvestorPositionDetail,pRspInfo,nRequestID,bIsLast);
+		(*m_msgQueue->m_fnOnRspQryInvestorPositionDetail)(this,pInvestorPositionDetail,pRspInfo,nRequestID,bIsLast);
 
 	if (bIsLast)
 		ReleaseRequestMapBuf(nRequestID);
@@ -720,7 +724,7 @@ void CTraderApi::ReqQryInstrument(const string& szInstrumentId)
 void CTraderApi::OnRspQryInstrument(CThostFtdcInstrumentField *pInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
 	if(m_msgQueue)
-		m_msgQueue->Input_OnRspQryInstrument(this,pInstrument,pRspInfo,nRequestID,bIsLast);
+		(*m_msgQueue->m_fnOnRspQryInstrument)(this,pInstrument,pRspInfo,nRequestID,bIsLast);
 
 	if (bIsLast)
 		ReleaseRequestMapBuf(nRequestID);
@@ -747,7 +751,7 @@ void CTraderApi::ReqQryInstrumentCommissionRate(const string& szInstrumentId)
 void CTraderApi::OnRspQryInstrumentCommissionRate(CThostFtdcInstrumentCommissionRateField *pInstrumentCommissionRate, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
 	if(m_msgQueue)
-		m_msgQueue->Input_OnRspQryInstrumentCommissionRate(this,pInstrumentCommissionRate,pRspInfo,nRequestID,bIsLast);
+		(*m_msgQueue->m_fnOnRspQryInstrumentCommissionRate)(this,pInstrumentCommissionRate,pRspInfo,nRequestID,bIsLast);
 
 	if (bIsLast)
 		ReleaseRequestMapBuf(nRequestID);
@@ -775,7 +779,7 @@ void CTraderApi::ReqQryInstrumentMarginRate(const string& szInstrumentId,TThostF
 void CTraderApi::OnRspQryInstrumentMarginRate(CThostFtdcInstrumentMarginRateField *pInstrumentMarginRate, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
 	if(m_msgQueue)
-		m_msgQueue->Input_OnRspQryInstrumentMarginRate(this,pInstrumentMarginRate,pRspInfo,nRequestID,bIsLast);
+		(*m_msgQueue->m_fnOnRspQryInstrumentMarginRate)(this,pInstrumentMarginRate,pRspInfo,nRequestID,bIsLast);
 
 	if (bIsLast)
 		ReleaseRequestMapBuf(nRequestID);
@@ -800,7 +804,7 @@ void CTraderApi::ReqQryDepthMarketData(const string& szInstrumentId)
 void CTraderApi::OnRspQryDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
 	if(m_msgQueue)
-		m_msgQueue->Input_OnRspQryDepthMarketData(this,pDepthMarketData,pRspInfo,nRequestID,bIsLast);
+		(*m_msgQueue->m_fnOnRspQryDepthMarketData)(this,pDepthMarketData,pRspInfo,nRequestID,bIsLast);
 
 	if (bIsLast)
 		ReleaseRequestMapBuf(nRequestID);
@@ -809,7 +813,7 @@ void CTraderApi::OnRspQryDepthMarketData(CThostFtdcDepthMarketDataField *pDepthM
 void CTraderApi::OnRspError(CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
 	if(m_msgQueue)
-		m_msgQueue->Input_OnRspError(this,pRspInfo,nRequestID,bIsLast);
+		(*m_msgQueue->m_fnOnRspError)(this,pRspInfo,nRequestID,bIsLast);
 
 	if (bIsLast)
 		ReleaseRequestMapBuf(nRequestID);
@@ -818,7 +822,7 @@ void CTraderApi::OnRspError(CThostFtdcRspInfoField *pRspInfo, int nRequestID, bo
 void CTraderApi::OnRspQryOrder(CThostFtdcOrderField *pOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
 	if(m_msgQueue)
-		m_msgQueue->Input_OnRspQryOrder(this,pOrder,pRspInfo,nRequestID,bIsLast);
+		(*m_msgQueue->m_fnOnRspQryOrder)(this,pOrder,pRspInfo,nRequestID,bIsLast);
 
 	if (bIsLast)
 		ReleaseRequestMapBuf(nRequestID);
@@ -828,7 +832,7 @@ void CTraderApi::OnRspQryOrder(CThostFtdcOrderField *pOrder, CThostFtdcRspInfoFi
 void CTraderApi::OnRspQryTrade(CThostFtdcTradeField *pTrade, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
 	if(m_msgQueue)
-		m_msgQueue->Input_OnRspQryTrade(this,pTrade,pRspInfo,nRequestID,bIsLast);
+		(*m_msgQueue->m_fnOnRspQryTrade)(this,pTrade,pRspInfo,nRequestID,bIsLast);
 
 	if (bIsLast)
 		ReleaseRequestMapBuf(nRequestID);
@@ -837,5 +841,5 @@ void CTraderApi::OnRspQryTrade(CThostFtdcTradeField *pTrade, CThostFtdcRspInfoFi
 void CTraderApi::OnRtnInstrumentStatus(CThostFtdcInstrumentStatusField *pInstrumentStatus)
 {
 	if(m_msgQueue)
-		m_msgQueue->Input_OnRtnInstrumentStatus(this,pInstrumentStatus);
+		(*m_msgQueue->m_fnOnRtnInstrumentStatus)(this,pInstrumentStatus);
 }

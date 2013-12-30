@@ -34,7 +34,7 @@ bool CMdUserApi::IsErrorRspInfo(CThostFtdcRspInfoField *pRspInfo, int nRequestID
 	if(bRet)
 	{
 		if(m_msgQueue)
-			m_msgQueue->Input_OnRspError(this,pRspInfo,nRequestID,bIsLast);
+			(*m_msgQueue->m_fnOnRspError)(this,pRspInfo,nRequestID,bIsLast);
 	}
 	return bRet;
 }
@@ -65,7 +65,7 @@ void CMdUserApi::Connect(const string& szPath,
 
 	m_status = E_inited;
 	if(m_msgQueue)
-		m_msgQueue->Input_OnConnect(this,NULL,m_status);
+		(*m_msgQueue->m_fnOnConnect)(this,NULL,m_status);
 
 	if (m_pApi)
 	{
@@ -96,7 +96,7 @@ void CMdUserApi::Connect(const string& szPath,
 		m_pApi->Init();
 		m_status = E_connecting;
 		if(m_msgQueue)
-			m_msgQueue->Input_OnConnect(this,NULL,m_status);
+			(*m_msgQueue->m_fnOnConnect)(this,NULL,m_status);
 	}
 }
 
@@ -115,7 +115,7 @@ void CMdUserApi::ReqUserLogin()
 	m_pApi->ReqUserLogin(&request,++m_nRequestID);
 	m_status = E_logining;
 	if(m_msgQueue)
-		m_msgQueue->Input_OnConnect(this,NULL,m_status);
+		(*m_msgQueue->m_fnOnConnect)(this,NULL,m_status);
 }
 
 void CMdUserApi::Disconnect()
@@ -128,7 +128,7 @@ void CMdUserApi::Disconnect()
 		m_pApi = NULL;
 
 		if(m_msgQueue)
-			m_msgQueue->Input_OnDisconnect(this,NULL,m_status);
+			(*m_msgQueue->m_fnOnDisconnect)(this,NULL,m_status);
 	}
 }
 
@@ -243,7 +243,7 @@ void CMdUserApi::OnFrontConnected()
 {
 	m_status =  E_connected;
 	if(m_msgQueue)
-		m_msgQueue->Input_OnConnect(this,NULL,m_status);
+		(*m_msgQueue->m_fnOnConnect)(this,NULL,m_status);
 
 	//连接成功后自动请求登录
 	ReqUserLogin();
@@ -258,7 +258,7 @@ void CMdUserApi::OnFrontDisconnected(int nReason)
 	GetOnFrontDisconnectedMsg(&RspInfo);
 	
 	if(m_msgQueue)
-		m_msgQueue->Input_OnDisconnect(this,&RspInfo,m_status);
+		(*m_msgQueue->m_fnOnDisconnect)(this,&RspInfo,m_status);
 }
 
 void CMdUserApi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
@@ -268,7 +268,7 @@ void CMdUserApi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CTho
 	{
 		m_status = E_logined;
 		if(m_msgQueue)
-			m_msgQueue->Input_OnConnect(this,pRspUserLogin,m_status);
+			(*m_msgQueue->m_fnOnConnect)(this,pRspUserLogin,m_status);
 		
 		//有可能断线了，本处是断线重连后重新订阅
 		set<string> mapOld = m_setInstrumentIDs;//记下上次订阅的合约
@@ -279,14 +279,14 @@ void CMdUserApi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CTho
 	{
 		m_status = E_authed;
 		if(m_msgQueue)
-			m_msgQueue->Input_OnDisconnect(this,pRspInfo,E_logining);
+			(*m_msgQueue->m_fnOnDisconnect)(this,pRspInfo,E_logining);
 	}
 }
 
 void CMdUserApi::OnRspError(CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
 	if(m_msgQueue)
-		m_msgQueue->Input_OnRspError(this,pRspInfo,nRequestID,bIsLast);
+		(*m_msgQueue->m_fnOnRspError)(this,pRspInfo,nRequestID,bIsLast);
 }
 
 void CMdUserApi::OnRspSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
@@ -317,5 +317,5 @@ void CMdUserApi::OnRspUnSubMarketData(CThostFtdcSpecificInstrumentField *pSpecif
 void CMdUserApi::OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData)
 {
 	if(m_msgQueue)
-		m_msgQueue->Input_OnRtnDepthMarketData(this,pDepthMarketData);
+		(*m_msgQueue->m_fnOnRtnDepthMarketData)(this,pDepthMarketData);
 }

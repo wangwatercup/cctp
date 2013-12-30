@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "CTPMsgQueue.h"
 
+/*
 void CCTPMsgQueue::Clear()
 {
 	SMsgItem* pItem = NULL;
@@ -593,3 +594,4 @@ void CCTPMsgQueue::Input_OnRspQryDepthMarketData(void* pTraderApi,CThostFtdcDept
 		_Input_TD(pItem);
 	}
 }
+*/
