@@ -16,3 +16,14 @@
 *.exe
 *.out
 *.app
+*.exp
+*.lik
+*.obj
+*.pch
+*.pdb
+*.sdf
+*.suo
+*.tlog
+
+/src/Debug
+/src/ipch
