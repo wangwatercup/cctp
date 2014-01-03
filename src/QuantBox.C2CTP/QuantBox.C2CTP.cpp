@@ -199,44 +199,44 @@ QUANTBOXC2CTP_API void __stdcall CTP_RegOnRtnTrade(void* pMsgQueue,fnOnRtnTrade 
 
 QUANTBOXC2CTP_API bool __stdcall CTP_ProcessMsgQueue(void* pMsgQueue)
 {
-	if(pMsgQueue)
+	/*if(pMsgQueue)
 	{
 		return CTP_GetQueue(pMsgQueue)->Process();
-	}
+	}*/
 	return false;
 }
 
 QUANTBOXC2CTP_API void __stdcall CTP_ClearMsgQueue(void* pMsgQueue)
 {
-	if(pMsgQueue)
+	/*if(pMsgQueue)
 	{
 		return CTP_GetQueue(pMsgQueue)->Clear();
-	}
+	}*/
 }
 
 QUANTBOXC2CTP_API void __stdcall CTP_StartMsgQueue(void* pMsgQueue)
 {
-	if(pMsgQueue)
+	/*if(pMsgQueue)
 	{
 		return CTP_GetQueue(pMsgQueue)->StartThread();
-	}
+	}*/
 }
 
 QUANTBOXC2CTP_API void __stdcall CTP_StopMsgQueue(void* pMsgQueue)
 {
-	if(pMsgQueue)
+	/*if(pMsgQueue)
 	{
 		return CTP_GetQueue(pMsgQueue)->StopThread();
-	}
+	}*/
 }
 
-//QUANTBOXC2CTP_API void __stdcall CTP_EmitDirectly(void* pMsgQueue,bool bDirect)
-//{
-//	if(pMsgQueue)
-//	{
-//		return CTP_GetQueue(pMsgQueue)->EmitDirectly(bDirect);
-//	}
-//}
+QUANTBOXC2CTP_API void __stdcall CTP_EmitDirectly(void* pMsgQueue,bool bDirect)
+{
+	/*if(pMsgQueue)
+	{
+		return CTP_GetQueue(pMsgQueue)->EmitDirectly(bDirect);
+	}*/
+}
 
 QUANTBOXC2CTP_API void* __stdcall MD_CreateMdApi()
 {

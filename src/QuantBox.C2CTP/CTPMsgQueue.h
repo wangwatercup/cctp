@@ -6,6 +6,7 @@
 class CCTPMsgQueue
 {
 	//响应队列中可能出现的消息类型（按字母排序）
+	/*
 	enum EnumMsgType
 	{
 		E_fnOnConnect,	
@@ -57,12 +58,13 @@ class CCTPMsgQueue
 			CThostFtdcTradingAccountField			TradingAccount;
 		};
 	};
-
+	
+	*/
 public:
 	CCTPMsgQueue(void)
 	{
-		m_hThread = NULL;
-		m_bRunning = false;
+	//	m_hThread = NULL;
+	//	m_bRunning = false;
 
 		//回调函数地址指针
 		m_fnOnConnect = NULL;
@@ -86,17 +88,18 @@ public:
 		m_fnOnRtnOrder = NULL;
 		m_fnOnRtnTrade = NULL;
 
-		m_hEvent = CreateEvent(NULL,FALSE,FALSE,NULL);
+		//m_hEvent = CreateEvent(NULL,FALSE,FALSE,NULL);
 	}
 	virtual ~CCTPMsgQueue(void)
 	{
-		StopThread();
-		Clear();
+	//	StopThread();
+	//	Clear();
 
-		CloseHandle(m_hEvent);
+		//CloseHandle(m_hEvent);
 	}
 
 public:
+	/*
 	//清空队列
 	void Clear();
 
@@ -106,7 +109,7 @@ public:
 	//由内部启动线程，内部主动调用Process触发回调
 	void StartThread();
 	void StopThread();
-
+	*/
 	//将外部的函数地址注册到队列(按字母排序)
 	void RegisterCallback(fnOnConnect pCallback){m_fnOnConnect = pCallback;}
 	void RegisterCallback(fnOnDisconnect pCallback){m_fnOnDisconnect = pCallback;}
@@ -129,31 +132,31 @@ public:
 	void RegisterCallback(fnOnRtnOrder pCallback){m_fnOnRtnOrder = pCallback;}
 	void RegisterCallback(fnOnRtnTrade pCallback){m_fnOnRtnTrade = pCallback;}
 
-	//响应结果处理后入队列(按字母排序)
-	void Input_OnConnect(void* pApi,CThostFtdcRspUserLoginField *pRspUserLogin,ConnectionStatus result);
-	void Input_OnDisconnect(void* pApi,CThostFtdcRspInfoField *pRspInfo,ConnectionStatus step);
-	void Input_OnErrRtnOrderAction(void* pTraderApi,CThostFtdcOrderActionField *pOrderAction, CThostFtdcRspInfoField *pRspInfo);
-	void Input_OnErrRtnOrderInsert(void* pTraderApi,CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo);
-	void Input_OnRspError(void* pApi,CThostFtdcRspInfoField* pRspInfo,int nRequestID,bool bIsLast);
-	void Input_OnRspOrderAction(void* pTraderApi,CThostFtdcInputOrderActionField *pInputOrderAction, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
-	void Input_OnRspOrderInsert(void* pTraderApi,CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
-	void Input_OnRspQryDepthMarketData(void* pTraderApi,CThostFtdcDepthMarketDataField *pDepthMarketData, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
-	void Input_OnRspQryInvestorPosition(void* pTraderApi,CThostFtdcInvestorPositionField *pInvestorPosition, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
-	void Input_OnRspQryInvestorPositionDetail(void* pTraderApi,CThostFtdcInvestorPositionDetailField *pInvestorPositionDetail, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
-	void Input_OnRspQryInstrument(void* pTraderApi,CThostFtdcInstrumentField *pInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
-	void Input_OnRspQryInstrumentCommissionRate(void* pTraderApi,CThostFtdcInstrumentCommissionRateField *pInstrumentCommissionRate, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
-	void Input_OnRspQryInstrumentMarginRate(void* pTraderApi,CThostFtdcInstrumentMarginRateField *pInstrumentMarginRate, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
-	void Input_OnRspQryOrder(void* pTraderApi,CThostFtdcOrderField *pOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
-	void Input_OnRspQryTrade(void* pTraderApi,CThostFtdcTradeField *pTrade, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
-	void Input_OnRspQryTradingAccount(void* pTraderApi,CThostFtdcTradingAccountField *pTradingAccount, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
-	void Input_OnRtnDepthMarketData(void* pMdApi,CThostFtdcDepthMarketDataField *pDepthMarketData);
-	void Input_OnRtnInstrumentStatus(void* pTraderApi,CThostFtdcInstrumentStatusField *pInstrumentStatus);
-	void Input_OnRtnOrder(void* pTraderApi,CThostFtdcOrderField *pOrder);
-	void Input_OnRtnTrade(void* pTraderApi,CThostFtdcTradeField *pTrade);
-private:
-	friend DWORD WINAPI ProcessThread(LPVOID lpParam);
-	void RunInThread();
-
+	////响应结果处理后入队列(按字母排序)
+	//void Input_OnConnect(void* pApi,CThostFtdcRspUserLoginField *pRspUserLogin,ConnectionStatus result);
+	//void Input_OnDisconnect(void* pApi,CThostFtdcRspInfoField *pRspInfo,ConnectionStatus step);
+	//void Input_OnErrRtnOrderAction(void* pTraderApi,CThostFtdcOrderActionField *pOrderAction, CThostFtdcRspInfoField *pRspInfo);
+	//void Input_OnErrRtnOrderInsert(void* pTraderApi,CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo);
+	//void Input_OnRspError(void* pApi,CThostFtdcRspInfoField* pRspInfo,int nRequestID,bool bIsLast);
+	//void Input_OnRspOrderAction(void* pTraderApi,CThostFtdcInputOrderActionField *pInputOrderAction, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	//void Input_OnRspOrderInsert(void* pTraderApi,CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	//void Input_OnRspQryDepthMarketData(void* pTraderApi,CThostFtdcDepthMarketDataField *pDepthMarketData, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	//void Input_OnRspQryInvestorPosition(void* pTraderApi,CThostFtdcInvestorPositionField *pInvestorPosition, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	//void Input_OnRspQryInvestorPositionDetail(void* pTraderApi,CThostFtdcInvestorPositionDetailField *pInvestorPositionDetail, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	//void Input_OnRspQryInstrument(void* pTraderApi,CThostFtdcInstrumentField *pInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	//void Input_OnRspQryInstrumentCommissionRate(void* pTraderApi,CThostFtdcInstrumentCommissionRateField *pInstrumentCommissionRate, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	//void Input_OnRspQryInstrumentMarginRate(void* pTraderApi,CThostFtdcInstrumentMarginRateField *pInstrumentMarginRate, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	//void Input_OnRspQryOrder(void* pTraderApi,CThostFtdcOrderField *pOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	//void Input_OnRspQryTrade(void* pTraderApi,CThostFtdcTradeField *pTrade, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	//void Input_OnRspQryTradingAccount(void* pTraderApi,CThostFtdcTradingAccountField *pTradingAccount, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	//void Input_OnRtnDepthMarketData(void* pMdApi,CThostFtdcDepthMarketDataField *pDepthMarketData);
+	//void Input_OnRtnInstrumentStatus(void* pTraderApi,CThostFtdcInstrumentStatusField *pInstrumentStatus);
+	//void Input_OnRtnOrder(void* pTraderApi,CThostFtdcOrderField *pOrder);
+	//void Input_OnRtnTrade(void* pTraderApi,CThostFtdcTradeField *pTrade);
+//private:
+	//friend DWORD WINAPI ProcessThread(LPVOID lpParam);
+	//void RunInThread();
+/*
 	//响应结果直接入队列
 	void _Input_MD(SMsgItem* pMsgItem);
 	void _Input_TD(SMsgItem* pMsgItem);
@@ -263,14 +266,14 @@ private:
 			(*m_fnOnRtnTrade)(pItem->pApi,&pItem->Trade);
 	}
 
-private:
 	volatile bool				m_bRunning;
 	HANDLE						m_hEvent;
 	HANDLE						m_hThread;
 
 	MSQueue<SMsgItem*>			m_queue_MD;			//响应队列
 	MSQueue<SMsgItem*>			m_queue_TD;			//响应队列
-
+	*/
+public:
 	//回调函数指针（按字母排序）
 	fnOnConnect							m_fnOnConnect;
 	fnOnDisconnect						m_fnOnDisconnect;
