@@ -16,42 +16,42 @@ class CCTPMsgQueue;
 class CTraderApi :
 	public CThostFtdcTraderSpi
 {
-	//请求数据包类型
-	enum RequestType
-	{
-		E_ReqAuthenticateField,
-		E_ReqUserLoginField,
-		E_SettlementInfoConfirmField,
-		E_QryInstrumentField,
-		E_InputOrderField,
-		E_InputOrderActionField,
-		E_QryTradingAccountField,
-		E_QryInvestorPositionField,
-		E_QryInvestorPositionDetailField,
-		E_QryInstrumentCommissionRateField,
-		E_QryInstrumentMarginRateField,
-		E_QryDepthMarketDataField,
-	};
+	////请求数据包类型
+	//enum RequestType
+	//{
+	//	E_ReqAuthenticateField,
+	//	E_ReqUserLoginField,
+	//	E_SettlementInfoConfirmField,
+	//	E_QryInstrumentField,
+	//	E_InputOrderField,
+	//	E_InputOrderActionField,
+	//	E_QryTradingAccountField,
+	//	E_QryInvestorPositionField,
+	//	E_QryInvestorPositionDetailField,
+	//	E_QryInstrumentCommissionRateField,
+	//	E_QryInstrumentMarginRateField,
+	//	E_QryDepthMarketDataField,
+	//};
 
-	//请求数据包结构体
-	struct SRequest
-	{
-		RequestType type;
-		union{
-			CThostFtdcReqAuthenticateField				ReqAuthenticateField;
-			CThostFtdcReqUserLoginField					ReqUserLoginField;
-			CThostFtdcSettlementInfoConfirmField		SettlementInfoConfirmField;
-			CThostFtdcQryDepthMarketDataField			QryDepthMarketDataField;
-			CThostFtdcQryInstrumentField				QryInstrumentField;
-			CThostFtdcQryInstrumentCommissionRateField	QryInstrumentCommissionRateField;
-			CThostFtdcQryInstrumentMarginRateField		QryInstrumentMarginRateField;
-			CThostFtdcQryInvestorPositionField			QryInvestorPositionField;
-			CThostFtdcQryInvestorPositionDetailField    QryInvestorPositionDetailField;
-			CThostFtdcQryTradingAccountField			QryTradingAccountField;
-			CThostFtdcInputOrderField					InputOrderField;
-			CThostFtdcInputOrderActionField				InputOrderActionField;
-		};
-	};
+	////请求数据包结构体
+	//struct SRequest
+	//{
+	//	RequestType type;
+	//	union{
+	//		CThostFtdcReqAuthenticateField				ReqAuthenticateField;
+	//		CThostFtdcReqUserLoginField					ReqUserLoginField;
+	//		CThostFtdcSettlementInfoConfirmField		SettlementInfoConfirmField;
+	//		CThostFtdcQryDepthMarketDataField			QryDepthMarketDataField;
+	//		CThostFtdcQryInstrumentField				QryInstrumentField;
+	//		CThostFtdcQryInstrumentCommissionRateField	QryInstrumentCommissionRateField;
+	//		CThostFtdcQryInstrumentMarginRateField		QryInstrumentMarginRateField;
+	//		CThostFtdcQryInvestorPositionField			QryInvestorPositionField;
+	//		CThostFtdcQryInvestorPositionDetailField    QryInvestorPositionDetailField;
+	//		CThostFtdcQryTradingAccountField			QryTradingAccountField;
+	//		CThostFtdcInputOrderField					InputOrderField;
+	//		CThostFtdcInputOrderActionField				InputOrderActionField;
+	//	};
+	//};
 
 public:
 	CTraderApi(void);
@@ -98,17 +98,17 @@ private:
 	void StopThread();
 
 	//指定数据包类型，生成对应数据包
-	SRequest * MakeRequestBuf(RequestType type);
+	//SRequest * MakeRequestBuf(RequestType type);
 	//清除将发送请求包队列
-	void ReleaseRequestListBuf();
+	//void ReleaseRequestListBuf();
 	//清除已发送请求包池
-	void ReleaseRequestMapBuf();
+	//void ReleaseRequestMapBuf();
 	//清除指定请求包池中指定包
-	void ReleaseRequestMapBuf(int nRequestID);
+	//void ReleaseRequestMapBuf(int nRequestID);
 	//添加到已经请求包池
-	void AddRequestMapBuf(int nRequestID,SRequest* pRequest);
+	//void AddRequestMapBuf(int nRequestID,SRequest* pRequest);
 	//添加到将发送包队列
-	void AddToSendQueue(SRequest * pRequest);
+	//void AddToSendQueue(SRequest * pRequest);
 
 	void ReqAuthenticate();
 	void ReqUserLogin();
@@ -187,10 +187,10 @@ private:
 	volatile bool				m_bRunning;
 	HANDLE						m_hThread;
 
-	CRITICAL_SECTION			m_csList;
-	list<SRequest*>				m_reqList;				//将发送请求队列
+	//CRITICAL_SECTION			m_csList;
+	//list<SRequest*>				m_reqList;				//将发送请求队列
 
-	CRITICAL_SECTION			m_csMap;
-	map<int,SRequest*>			m_reqMap;				//已发送请求池
+	//CRITICAL_SECTION			m_csMap;
+	//map<int,SRequest*>			m_reqMap;				//已发送请求池
 };
 

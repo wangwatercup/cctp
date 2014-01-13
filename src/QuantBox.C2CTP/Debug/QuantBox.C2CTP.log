@@ -1,10 +1,21 @@
-﻿Build started 2013/12/29 23:48:01.
-     1>Project "C:\Users\Yibo\Documents\GitHub\CTP\C-CTP\src\QuantBox.C2CTP\QuantBox.C2CTP.vcxproj" on node 2 (Build target(s)).
+﻿Build started 2014/1/13 18:34:16.
+     1>Project "C:\Users\Yibo\Documents\GitHub\cctp\src\QuantBox.C2CTP\QuantBox.C2CTP.vcxproj" on node 2 (Rebuild target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D QUANTBOXC2CTP_EXPORTS /D _CRT_SECURE_NO_WARNINGS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\QuantBox.C2CTP.pch" /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt TraderApi.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D QUANTBOXC2CTP_EXPORTS /D _CRT_SECURE_NO_WARNINGS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yc"stdafx.h" /Fp"Debug\QuantBox.C2CTP.pch" /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt stdafx.cpp
+         stdafx.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D QUANTBOXC2CTP_EXPORTS /D _CRT_SECURE_NO_WARNINGS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\QuantBox.C2CTP.pch" /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt CTPMsgQueue.cpp include\toolkit.cpp MdUserApi.cpp QuantBox.C2CTP.cpp TraderApi.cpp
          TraderApi.cpp
+         QuantBox.C2CTP.cpp
+         MdUserApi.cpp
+         toolkit.cpp
+         CTPMsgQueue.cpp
+         Generating Code...
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D QUANTBOXC2CTP_EXPORTS /D _CRT_SECURE_NO_WARNINGS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt dllmain.cpp
+         dllmain.cpp
+       ResourceCompile:
+         C:\Program Files (x86)\Windows Kits\8.0\bin\x86\rc.exe /D _UNICODE /D UNICODE /l"0x0409" /nologo /fo"Debug\QuantBox.C2CTP.res" QuantBox.C2CTP.rc 
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Yibo\Documents\GitHub\CTP\C-CTP\src\Debug\QuantBox.C2CTP.dll" /INCREMENTAL /NOLOGO /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /manifestinput:"C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\Include\Manifest\dpiaware.manifest" /DEBUG /PDB:"C:\Users\Yibo\Documents\GitHub\CTP\C-CTP\src\Debug\QuantBox.C2CTP.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Yibo\Documents\GitHub\CTP\C-CTP\src\Debug\QuantBox.C2CTP.lib" /MACHINE:X86 /DLL Debug\QuantBox.C2CTP.res
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Yibo\Documents\GitHub\cctp\src\Debug\QuantBox.C2CTP.dll" /INCREMENTAL /NOLOGO /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /manifestinput:"C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\Include\Manifest\dpiaware.manifest" /DEBUG /PDB:"C:\Users\Yibo\Documents\GitHub\cctp\src\Debug\QuantBox.C2CTP.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Yibo\Documents\GitHub\cctp\src\Debug\QuantBox.C2CTP.lib" /MACHINE:X86 /DLL Debug\QuantBox.C2CTP.res
          Debug\CTPMsgQueue.obj
          Debug\dllmain.obj
          Debug\toolkit.obj
@@ -14,9 +25,10 @@
          Debug\TraderApi.obj
          include\CTP\thostmduserapi.lib
          include\CTP\thosttraderapi.lib
-         QuantBox.C2CTP.vcxproj -> C:\Users\Yibo\Documents\GitHub\CTP\C-CTP\src\Debug\QuantBox.C2CTP.dll
-     1>Done Building Project "C:\Users\Yibo\Documents\GitHub\CTP\C-CTP\src\QuantBox.C2CTP\QuantBox.C2CTP.vcxproj" (Build target(s)).
+            Creating library C:\Users\Yibo\Documents\GitHub\cctp\src\Debug\QuantBox.C2CTP.lib and object C:\Users\Yibo\Documents\GitHub\cctp\src\Debug\QuantBox.C2CTP.exp
+         QuantBox.C2CTP.vcxproj -> C:\Users\Yibo\Documents\GitHub\cctp\src\Debug\QuantBox.C2CTP.dll
+     1>Done Building Project "C:\Users\Yibo\Documents\GitHub\cctp\src\QuantBox.C2CTP\QuantBox.C2CTP.vcxproj" (Rebuild target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:10.04
+Time Elapsed 00:00:06.36
