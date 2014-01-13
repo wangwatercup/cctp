@@ -411,6 +411,8 @@ struct CThostFtdcInstrumentField
 	TThostFtdcRatioType	LongMarginRatio;
 	///空头保证金率
 	TThostFtdcRatioType	ShortMarginRatio;
+	///是否使用大额单边保证金算法
+	TThostFtdcMaxMarginSideAlgorithmType	MaxMarginSideAlgorithm;
 };
 
 ///经纪公司
@@ -600,6 +602,8 @@ struct CThostFtdcTradingAccountField
 	TThostFtdcMoneyType	DeliveryMargin;
 	///交易所交割保证金
 	TThostFtdcMoneyType	ExchangeDeliveryMargin;
+	///保底期货结算准备金
+	TThostFtdcMoneyType	ReserveBalance;
 };
 
 ///投资者持仓
@@ -826,6 +830,8 @@ struct CThostFtdcDepthMarketDataField
 	TThostFtdcVolumeType	AskVolume5;
 	///当日均价
 	TThostFtdcPriceType	AveragePrice;
+	///业务日期
+	TThostFtdcDateType	ActionDay;
 };
 
 ///投资者合约交易权限
@@ -1039,6 +1045,8 @@ struct CThostFtdcCurrentTimeField
 	TThostFtdcTimeType	CurrTime;
 	///当前时间（毫秒）
 	TThostFtdcMillisecType	CurrMillisec;
+	///业务日期
+	TThostFtdcDateType	ActionDay;
 };
 
 ///通讯阶段
@@ -1048,6 +1056,8 @@ struct CThostFtdcCommPhaseField
 	TThostFtdcDateType	TradingDay;
 	///通讯时段编号
 	TThostFtdcCommPhaseNoType	CommPhaseNo;
+	///系统编号
+	TThostFtdcSystemIDType	SystemID;
 };
 
 ///登录信息
@@ -1871,6 +1881,8 @@ struct CThostFtdcSyncingTradingAccountField
 	TThostFtdcMoneyType	DeliveryMargin;
 	///交易所交割保证金
 	TThostFtdcMoneyType	ExchangeDeliveryMargin;
+	///保底期货结算准备金
+	TThostFtdcMoneyType	ReserveBalance;
 };
 
 ///正在同步中的投资者持仓
@@ -2105,14 +2117,14 @@ struct CThostFtdcQryTradingCodeField
 	TThostFtdcClientIDTypeType	ClientIDType;
 };
 
-///查询交易编码
+///投资者组
 struct CThostFtdcQryInvestorGroupField
 {
 	///经纪公司代码
 	TThostFtdcBrokerIDType	BrokerID;
 };
 
-///查询交易编码
+///查询合约保证金率
 struct CThostFtdcQryInstrumentMarginRateField
 {
 	///经纪公司代码
@@ -2125,7 +2137,7 @@ struct CThostFtdcQryInstrumentMarginRateField
 	TThostFtdcHedgeFlagType	HedgeFlag;
 };
 
-///查询交易编码
+///查询手续费率
 struct CThostFtdcQryInstrumentCommissionRateField
 {
 	///经纪公司代码
@@ -2136,7 +2148,7 @@ struct CThostFtdcQryInstrumentCommissionRateField
 	TThostFtdcInstrumentIDType	InstrumentID;
 };
 
-///查询交易编码
+///查询合约交易权限
 struct CThostFtdcQryInstrumentTradingRightField
 {
 	///经纪公司代码
@@ -2165,17 +2177,6 @@ struct CThostFtdcQryTraderField
 	TThostFtdcTraderIDType	TraderID;
 };
 
-///查询经纪公司会员代码
-struct CThostFtdcQryPartBrokerField
-{
-	///交易所代码
-	TThostFtdcExchangeIDType	ExchangeID;
-	///经纪公司代码
-	TThostFtdcBrokerIDType	BrokerID;
-	///会员代码
-	TThostFtdcParticipantIDType	ParticipantID;
-};
-
 ///查询管理用户功能权限
 struct CThostFtdcQrySuperUserFunctionField
 {
@@ -2194,6 +2195,17 @@ struct CThostFtdcQryUserSessionField
 	TThostFtdcBrokerIDType	BrokerID;
 	///用户代码
 	TThostFtdcUserIDType	UserID;
+};
+
+///查询经纪公司会员代码
+struct CThostFtdcQryPartBrokerField
+{
+	///交易所代码
+	TThostFtdcExchangeIDType	ExchangeID;
+	///经纪公司代码
+	TThostFtdcBrokerIDType	BrokerID;
+	///会员代码
+	TThostFtdcParticipantIDType	ParticipantID;
 };
 
 ///查询前置状态
@@ -2332,6 +2344,28 @@ struct CThostFtdcQrySettlementInfoField
 	TThostFtdcDateType	TradingDay;
 };
 
+///查询交易所保证金率
+struct CThostFtdcQryExchangeMarginRateField
+{
+	///经纪公司代码
+	TThostFtdcBrokerIDType	BrokerID;
+	///合约代码
+	TThostFtdcInstrumentIDType	InstrumentID;
+	///投机套保标志
+	TThostFtdcHedgeFlagType	HedgeFlag;
+};
+
+///查询交易所调整保证金率
+struct CThostFtdcQryExchangeMarginRateAdjustField
+{
+	///经纪公司代码
+	TThostFtdcBrokerIDType	BrokerID;
+	///合约代码
+	TThostFtdcInstrumentIDType	InstrumentID;
+	///投机套保标志
+	TThostFtdcHedgeFlagType	HedgeFlag;
+};
+
 ///查询报单
 struct CThostFtdcQryHisOrderField
 {
@@ -2402,6 +2436,8 @@ struct CThostFtdcMarketDataField
 	TThostFtdcTimeType	UpdateTime;
 	///最后修改毫秒
 	TThostFtdcMillisecType	UpdateMillisec;
+	///业务日期
+	TThostFtdcDateType	ActionDay;
 };
 
 ///行情基础属性
@@ -2527,6 +2563,8 @@ struct CThostFtdcMarketDataUpdateTimeField
 	TThostFtdcTimeType	UpdateTime;
 	///最后修改毫秒
 	TThostFtdcMillisecType	UpdateMillisec;
+	///业务日期
+	TThostFtdcDateType	ActionDay;
 };
 
 ///行情交易所代码属性
@@ -3034,6 +3072,8 @@ struct CThostFtdcInvestorPositionCombineDetailField
 	TThostFtdcLegMultipleType	LegMultiple;
 	///组合持仓合约编码
 	TThostFtdcInstrumentIDType	CombInstrumentID;
+	///成交组号
+	TThostFtdcTradeGroupIDType	TradeGroupID;
 };
 
 ///预埋单
@@ -3838,6 +3878,74 @@ struct CThostFtdcQryEWarrantOffsetField
 	TThostFtdcExchangeIDType	ExchangeID;
 	///合约代码
 	TThostFtdcInstrumentIDType	InstrumentID;
+};
+
+///查询投资者品种/跨品种保证金
+struct CThostFtdcQryInvestorProductGroupMarginField
+{
+	///经纪公司代码
+	TThostFtdcBrokerIDType	BrokerID;
+	///投资者代码
+	TThostFtdcInvestorIDType	InvestorID;
+	///品种/跨品种标示
+	TThostFtdcInstrumentIDType	ProductGroupID;
+};
+
+///投资者品种/跨品种保证金
+struct CThostFtdcInvestorProductGroupMarginField
+{
+	///品种/跨品种标示
+	TThostFtdcInstrumentIDType	ProductGroupID;
+	///经纪公司代码
+	TThostFtdcBrokerIDType	BrokerID;
+	///投资者代码
+	TThostFtdcInvestorIDType	InvestorID;
+	///交易日
+	TThostFtdcDateType	TradingDay;
+	///结算编号
+	TThostFtdcSettlementIDType	SettlementID;
+	///冻结的保证金
+	TThostFtdcMoneyType	FrozenMargin;
+	///多头冻结的保证金
+	TThostFtdcMoneyType	LongFrozenMargin;
+	///空头冻结的保证金
+	TThostFtdcMoneyType	ShortFrozenMargin;
+	///占用的保证金
+	TThostFtdcMoneyType	UseMargin;
+	///多头保证金
+	TThostFtdcMoneyType	LongUseMargin;
+	///空头保证金
+	TThostFtdcMoneyType	ShortUseMargin;
+	///交易所保证金
+	TThostFtdcMoneyType	ExchMargin;
+	///交易所多头保证金
+	TThostFtdcMoneyType	LongExchMargin;
+	///交易所空头保证金
+	TThostFtdcMoneyType	ShortExchMargin;
+	///平仓盈亏
+	TThostFtdcMoneyType	CloseProfit;
+	///冻结的手续费
+	TThostFtdcMoneyType	FrozenCommission;
+	///手续费
+	TThostFtdcMoneyType	Commission;
+	///冻结的资金
+	TThostFtdcMoneyType	FrozenCash;
+	///资金差额
+	TThostFtdcMoneyType	CashIn;
+	///持仓盈亏
+	TThostFtdcMoneyType	PositionProfit;
+	///折抵总金额
+	TThostFtdcMoneyType	OffsetAmount;
+	///多头折抵总金额
+	TThostFtdcMoneyType	LongOffsetAmount;
+	///空头折抵总金额
+	TThostFtdcMoneyType	ShortOffsetAmount;
+	///交易所折抵总金额
+	TThostFtdcMoneyType	ExchOffsetAmount;
+	///交易所多头折抵总金额
+	TThostFtdcMoneyType	LongExchOffsetAmount;
+	///交易所空头折抵总金额
+	TThostFtdcMoneyType	ShortExchOffsetAmount;
 };
 
 ///转帐开户请求
@@ -5887,6 +5995,64 @@ struct CThostFtdcDRTransferField
 	TThostFtdcBrokerIDType	OrigBrokerID;
 	///目标易用单元代码
 	TThostFtdcBrokerIDType	DestBrokerID;
+};
+
+///Fens用户信息
+struct CThostFtdcFensUserInfoField
+{
+	///经纪公司代码
+	TThostFtdcBrokerIDType	BrokerID;
+	///用户代码
+	TThostFtdcUserIDType	UserID;
+	///登录模式
+	TThostFtdcLoginModeType	LoginMode;
+};
+
+///当前银期所属交易中心
+struct CThostFtdcCurrTransferIdentityField
+{
+	///交易中心代码
+	TThostFtdcDRIdentityIDType	IdentityID;
+};
+
+///禁止登录用户
+struct CThostFtdcLoginForbiddenUserField
+{
+	///经纪公司代码
+	TThostFtdcBrokerIDType	BrokerID;
+	///用户代码
+	TThostFtdcUserIDType	UserID;
+};
+
+///查询禁止登录用户
+struct CThostFtdcQryLoginForbiddenUserField
+{
+	///经纪公司代码
+	TThostFtdcBrokerIDType	BrokerID;
+	///用户代码
+	TThostFtdcUserIDType	UserID;
+};
+
+///UDP组播组信息
+struct CThostFtdcMulticastGroupInfoField
+{
+	///组播组IP地址
+	TThostFtdcIPAddressType	GroupIP;
+	///组播组IP端口
+	TThostFtdcIPPortType	GroupPort;
+	///源地址
+	TThostFtdcIPAddressType	SourceIP;
+};
+
+///资金账户基本准备金
+struct CThostFtdcTradingAccountReserveField
+{
+	///经纪公司代码
+	TThostFtdcBrokerIDType	BrokerID;
+	///投资者代码
+	TThostFtdcInvestorIDType	InvestorID;
+	///基本准备金
+	TThostFtdcMoneyType	Reserve;
 };
 
 
