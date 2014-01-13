@@ -156,7 +156,7 @@ QUANTBOXC2CTP_API int __stdcall TD_SendOrder(
 	TThostFtdcVolumeConditionType VolumeCondition);
 
 //撤单
-QUANTBOXC2CTP_API void __stdcall TD_CancelOrder(void* pTraderApi,CThostFtdcOrderField *pOrder);
+QUANTBOXC2CTP_API void __stdcall TD_CancelOrder(void* pTraderApi,TThostFtdcBrokerIDType brokerID, TThostFtdcInvestorIDType investorID, TThostFtdcOrderRefType orderRef, int frontID, int sessionID, TThostFtdcExchangeIDType exchangeID, TThostFtdcOrderSysIDType orderSysID, TThostFtdcInstrumentIDType instrumentID);
 
 //断开连接
 QUANTBOXC2CTP_API void __stdcall TD_Disconnect(void* pTraderApi);

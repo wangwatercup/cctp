@@ -570,48 +570,44 @@ void CTraderApi::OnRtnTrade(CThostFtdcTradeField *pTrade)
 		(*m_msgQueue->m_fnOnRtnTrade)(this,pTrade);
 }
 
-void CTraderApi::ReqOrderAction(CThostFtdcOrderField *pOrder)
+void CTraderApi::ReqOrderAction(CThostFtdcInputOrderActionField *body)
 {
-	if (NULL == m_pApi)
-		return;
-		CThostFtdcInputOrderActionField req;
-	memset(&req, 0, sizeof(req));
-	///经纪公司代码
-	strcpy_s(req.BrokerID,  pOrder->BrokerID);
-	///投资者代码
-	strcpy_s(req.InvestorID, pOrder->InvestorID);
-	///报单操作引用
-//	TThostFtdcOrderActionRefType	OrderActionRef;
-	///报单引用
-	//strcpy_s(req.OrderRef, "2");
-	///请求编号
-//	TThostFtdcRequestIDType	RequestID;
-	///前置编号
-	req.FrontID = pOrder->FrontID;
-	///会话编号
-	req.SessionID = pOrder->SessionID;
-	///交易所代码
-//	TThostFtdcExchangeIDType	ExchangeID;
-	strcpy_s(req.ExchangeID, pOrder->ExchangeID);
-	///报单编号
-//	TThostFtdcOrderSysIDType	OrderSysID;
-	strcpy_s(req.OrderSysID, pOrder->OrderSysID);
-	///操作标志
-	req.ActionFlag = THOST_FTDC_AF_Delete;
-	///价格
-//	TThostFtdcPriceType	LimitPrice;
-	///数量变化
-//	TThostFtdcVolumeType	VolumeChange;
-	///用户代码
-//	TThostFtdcUserIDType	UserID;
-	///合约代码
-	strcpy_s(req.InstrumentID, pOrder->InstrumentID);
+    if (NULL == m_pApi)
+            return;
+        
+      
+  
+        
+    long lRequest = InterlockedIncrement(&m_lRequestID);
 
-	int iResult = m_pApi->ReqOrderAction(&req, 0);
+   int result = m_pApi->ReqOrderAction(body,lRequest);
+
+   
+		ofstream myfile;
+	myfile.open (".\\logs\\log_cancel_order.txt", std::ofstream::out | std::ofstream::app);
+	myfile <<body->InstrumentID<<" "<<body->FrontID<<" "<<body->SessionID<<" "<<body->OrderRef<<endl;
+	myfile.close();
+       
 }
 
 void CTraderApi::OnRspOrderAction(CThostFtdcInputOrderActionField *pInputOrderAction, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
+	if(pInputOrderAction)
+	{
+		ofstream myfile;
+		myfile.open (".\\logs\\log_order_action.txt", std::ofstream::out | std::ofstream::app);
+		myfile <<pInputOrderAction->FrontID<<" "<<" "<<pInputOrderAction->SessionID<<" "<<pInputOrderAction->OrderRef<<" "<<endl;
+		if(pRspInfo)
+			myfile<<pRspInfo->ErrorID<<" "<<pRspInfo->ErrorMsg<<endl;
+		myfile.close();
+	}
+	if(!pInputOrderAction && pRspInfo)
+	{
+		ofstream myfile;
+		myfile.open (".\\logs\\log_order_action.txt", std::ofstream::out | std::ofstream::app);
+		myfile<<pRspInfo->ErrorID<<" "<<pRspInfo->ErrorMsg<<endl;
+		myfile.close();
+	}
 	if(m_msgQueue)
 		(*m_msgQueue->m_fnOnRspOrderAction)(this,pInputOrderAction,pRspInfo,nRequestID,bIsLast);
 }
@@ -624,10 +620,10 @@ void CTraderApi::OnErrRtnOrderAction(CThostFtdcOrderActionField *pOrderAction, C
 
 void CTraderApi::OnRtnOrder(CThostFtdcOrderField *pOrder)
 {
-	ofstream myfile;
+	/*ofstream myfile;
 	myfile.open (".\\logs\\log_order.txt", std::ofstream::out | std::ofstream::app);
 	myfile <<pOrder->InstrumentID<<" "<<pOrder->InsertTime<<"cpp api on return orderr\n";
-	myfile.close();
+	myfile.close();*/
 	if(m_msgQueue)
 	{
 		(* m_msgQueue->m_fnOnRtnOrder)(this,pOrder);

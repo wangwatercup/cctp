@@ -81,7 +81,7 @@ public:
 		TThostFtdcContingentConditionType ContingentCondition,
 		TThostFtdcPriceType StopPrice,
 		TThostFtdcVolumeConditionType VolumeCondition);
-	void ReqOrderAction(CThostFtdcOrderField *pOrder);
+	void ReqOrderAction(CThostFtdcInputOrderActionField *body);
 
 	void ReqQryTradingAccount();
 	void ReqQryInvestorPosition(const string& szInstrumentId);
