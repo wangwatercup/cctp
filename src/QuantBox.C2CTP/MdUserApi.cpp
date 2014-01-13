@@ -60,7 +60,7 @@ void CMdUserApi::Connect(const string& szPath,
 	sprintf(pszPath,"%s\\Md\\",szPath.c_str());
 	makedirs(pszPath);
 	
-	m_pApi = CThostFtdcMdApi::CreateFtdcMdApi(pszPath,(szAddresses.find("udp://") != szAddresses.npos));
+	m_pApi = CThostFtdcMdApi::CreateFtdcMdApi(pszPath);
 	delete[] pszPath;
 
 	m_status = E_inited;
