@@ -381,6 +381,7 @@ QUANTBOXC2CTP_API void __stdcall TD_CancelOrder(void* pTraderApi,TThostFtdcBroke
 	{
 		CThostFtdcInputOrderActionField body;
 
+		memset(&body,0,sizeof(body));
 		///经纪公司代码
 		strncpy(body.BrokerID, brokerID,sizeof(TThostFtdcBrokerIDType));
 		///投资者代码
