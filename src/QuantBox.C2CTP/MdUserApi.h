@@ -26,14 +26,14 @@ public:
 		const string& szPassword);
 	void Disconnect();
 
-	void Subscribe(const string& szInstrumentIDs);
-	void Unsubscribe(const string& szInstrumentIDs);
+	int Subscribe(const string& szInstrumentIDs);
+	int Unsubscribe(const string& szInstrumentIDs);
 
 private:
 	//¶©ÔÄÐÐÇé
-	void Subscribe(const set<string>& instrumentIDs);
+	int Subscribe(const set<string>& instrumentIDs);
 	//µÇÂ¼ÇëÇó
-	void ReqUserLogin();
+	int ReqUserLogin();
 
 	virtual void OnFrontConnected();
 	virtual void OnFrontDisconnected(int nReason);

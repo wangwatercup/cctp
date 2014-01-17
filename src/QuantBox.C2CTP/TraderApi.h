@@ -80,16 +80,19 @@ public:
 		TThostFtdcTimeConditionType TimeCondition,
 		TThostFtdcContingentConditionType ContingentCondition,
 		TThostFtdcPriceType StopPrice,
-		TThostFtdcVolumeConditionType VolumeCondition);
-	void ReqOrderAction(CThostFtdcOrderField *pOrder);
+		TThostFtdcVolumeConditionType VolumeCondition,
+		TThostFtdcOrderRefType	OrderRef);
 
-	void ReqQryTradingAccount();
-	void ReqQryInvestorPosition(const string& szInstrumentId);
-	void ReqQryInvestorPositionDetail(const string& szInstrumentId);
-	void ReqQryInstrument(const string& szInstrumentId);
-	void ReqQryInstrumentCommissionRate(const string& szInstrumentId);
-	void ReqQryInstrumentMarginRate(const string& szInstrumentId,TThostFtdcHedgeFlagType HedgeFlag = THOST_FTDC_HF_Speculation);
-	void ReqQryDepthMarketData(const string& szInstrumentId);
+	int ReqOrderAction(TThostFtdcBrokerIDType brokerID, TThostFtdcInvestorIDType investorID, TThostFtdcOrderRefType orderRef, int frontID, int sessionID, TThostFtdcExchangeIDType exchangeID, TThostFtdcOrderSysIDType orderSysID, TThostFtdcInstrumentIDType instrumentID);
+	int ReqQryDepthMarketData(const string& szInstrumentId);
+	int ReqQryInvestorPosition(const string& szInstrumentId);
+	int ReqQryInvestorPositionDetail(const string& szInstrumentId);
+	int ReqQryInstrument(const string& szInstrumentId);
+	int ReqQryInstrumentCommissionRate(const string& szInstrumentId);
+	int ReqQryInstrumentMarginRate(const string& szInstrumentId,TThostFtdcHedgeFlagType HedgeFlag = THOST_FTDC_HF_Speculation);
+	int ReqQryOrder(TThostFtdcBrokerIDType brokerID, TThostFtdcInvestorIDType investorID, TThostFtdcInstrumentIDType instrumentID, TThostFtdcExchangeIDType exchangeID, TThostFtdcOrderSysIDType orderSysID);
+	int ReqQryTradingAccount();
+
 
 private:
 	//数据包发送线程
@@ -110,9 +113,9 @@ private:
 	//添加到将发送包队列
 	//void AddToSendQueue(SRequest * pRequest);
 
-	void ReqAuthenticate();
-	void ReqUserLogin();
-	void ReqSettlementInfoConfirm();
+	int ReqAuthenticate();
+	int ReqUserLogin();
+	int ReqSettlementInfoConfirm();
 
 	//检查是否出错
 	bool IsErrorRspInfo(CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);//向消息队列输出信息

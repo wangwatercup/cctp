@@ -197,46 +197,46 @@ QUANTBOXC2CTP_API void __stdcall CTP_RegOnRtnTrade(void* pMsgQueue,fnOnRtnTrade 
 	}
 }
 
-QUANTBOXC2CTP_API bool __stdcall CTP_ProcessMsgQueue(void* pMsgQueue)
-{
-	/*if(pMsgQueue)
-	{
-		return CTP_GetQueue(pMsgQueue)->Process();
-	}*/
-	return false;
-}
+//QUANTBOXC2CTP_API bool __stdcall CTP_ProcessMsgQueue(void* pMsgQueue)
+//{
+//	/*if(pMsgQueue)
+//	{
+//		return CTP_GetQueue(pMsgQueue)->Process();
+//	}*/
+//	return false;
+//}
 
-QUANTBOXC2CTP_API void __stdcall CTP_ClearMsgQueue(void* pMsgQueue)
-{
-	/*if(pMsgQueue)
-	{
-		return CTP_GetQueue(pMsgQueue)->Clear();
-	}*/
-}
+//QUANTBOXC2CTP_API void __stdcall CTP_ClearMsgQueue(void* pMsgQueue)
+//{
+//	/*if(pMsgQueue)
+//	{
+//		return CTP_GetQueue(pMsgQueue)->Clear();
+//	}*/
+//}
 
-QUANTBOXC2CTP_API void __stdcall CTP_StartMsgQueue(void* pMsgQueue)
-{
-	/*if(pMsgQueue)
-	{
-		return CTP_GetQueue(pMsgQueue)->StartThread();
-	}*/
-}
+//QUANTBOXC2CTP_API void __stdcall CTP_StartMsgQueue(void* pMsgQueue)
+//{
+//	/*if(pMsgQueue)
+//	{
+//		return CTP_GetQueue(pMsgQueue)->StartThread();
+//	}*/
+//}
 
-QUANTBOXC2CTP_API void __stdcall CTP_StopMsgQueue(void* pMsgQueue)
-{
-	/*if(pMsgQueue)
-	{
-		return CTP_GetQueue(pMsgQueue)->StopThread();
-	}*/
-}
+//QUANTBOXC2CTP_API void __stdcall CTP_StopMsgQueue(void* pMsgQueue)
+//{
+//	/*if(pMsgQueue)
+//	{
+//		return CTP_GetQueue(pMsgQueue)->StopThread();
+//	}*/
+//}
 
-QUANTBOXC2CTP_API void __stdcall CTP_EmitDirectly(void* pMsgQueue,bool bDirect)
-{
-	/*if(pMsgQueue)
-	{
-		return CTP_GetQueue(pMsgQueue)->EmitDirectly(bDirect);
-	}*/
-}
+//QUANTBOXC2CTP_API void __stdcall CTP_EmitDirectly(void* pMsgQueue,bool bDirect)
+//{
+//	/*if(pMsgQueue)
+//	{
+//		return CTP_GetQueue(pMsgQueue)->EmitDirectly(bDirect);
+//	}*/
+//}
 
 QUANTBOXC2CTP_API void* __stdcall MD_CreateMdApi()
 {
@@ -277,22 +277,24 @@ QUANTBOXC2CTP_API void __stdcall MD_Disconnect(void* pMdUserApi)
 	}
 }
 
-QUANTBOXC2CTP_API void __stdcall MD_Subscribe(void* pMdUserApi,const char* szInstrumentIDs,const char* szExchageID)
+QUANTBOXC2CTP_API int __stdcall MD_Subscribe(void* pMdUserApi,const char* szInstrumentIDs,const char* szExchageID)
 {
 	if(pMdUserApi
 		&&szInstrumentIDs)
 	{
-		MD_GetApi(pMdUserApi)->Subscribe(szInstrumentIDs);
+		return MD_GetApi(pMdUserApi)->Subscribe(szInstrumentIDs);
 	}
+	return NULL_ERROR;
 }
 
-QUANTBOXC2CTP_API void __stdcall MD_Unsubscribe(void* pMdUserApi,const char* szInstrumentIDs,const char* szExchageID)
+QUANTBOXC2CTP_API int __stdcall MD_Unsubscribe(void* pMdUserApi,const char* szInstrumentIDs,const char* szExchageID)
 {
 	if(pMdUserApi
 		&&szInstrumentIDs)
 	{
-		MD_GetApi(pMdUserApi)->Unsubscribe(szInstrumentIDs);
+		return MD_GetApi(pMdUserApi)->Unsubscribe(szInstrumentIDs);
 	}
+	return NULL_ERROR;
 }
 
 QUANTBOXC2CTP_API void __stdcall MD_ReleaseMdApi(void* pMdUserApi)
@@ -353,7 +355,8 @@ QUANTBOXC2CTP_API int __stdcall TD_SendOrder(
 	TThostFtdcTimeConditionType TimeCondition,
 	TThostFtdcContingentConditionType ContingentCondition,
 	double StopPrice,
-	TThostFtdcVolumeConditionType VolumeCondition)
+	TThostFtdcVolumeConditionType VolumeCondition,
+	TThostFtdcOrderRefType	OrderRef)
 {
 	if(pTraderApi
 		&&szInstrument
@@ -370,17 +373,20 @@ QUANTBOXC2CTP_API int __stdcall TD_SendOrder(
 			TimeCondition,
 			ContingentCondition,
 			StopPrice,
-			VolumeCondition);
+			VolumeCondition,
+			OrderRef);
 	}
-	return 0;
+	return NULL_ERROR;
 }
 
-QUANTBOXC2CTP_API void __stdcall TD_CancelOrder(void* pTraderApi,CThostFtdcOrderField *pOrder)
+
+QUANTBOXC2CTP_API int __stdcall TD_CancelOrder(void* pTraderApi,TThostFtdcBrokerIDType brokerID, TThostFtdcInvestorIDType investorID, TThostFtdcOrderRefType orderRef, int frontID, int sessionID, TThostFtdcExchangeIDType exchangeID, TThostFtdcOrderSysIDType orderSysID, TThostFtdcInstrumentIDType instrumentID)
 {
 	if(pTraderApi)
-	{
-		TD_GetApi(pTraderApi)->ReqOrderAction(pOrder);
+	{	
+		return TD_GetApi(pTraderApi)->ReqOrderAction(brokerID, investorID, orderRef, frontID, sessionID, exchangeID, orderSysID, instrumentID);
 	}
+	return NULL_ERROR;
 }
 
 QUANTBOXC2CTP_API void __stdcall TD_Disconnect(void* pTraderApi)
@@ -399,58 +405,74 @@ QUANTBOXC2CTP_API void __stdcall TD_ReleaseTdApi(void* pTraderApi)
 	}
 }
 
-QUANTBOXC2CTP_API void __stdcall TD_ReqQryInvestorPosition(void* pTraderApi,const char* szInstrumentId)
+QUANTBOXC2CTP_API int __stdcall TD_ReqQryInvestorPosition(void* pTraderApi,const char* szInstrumentId)
 {
 	if(pTraderApi)
 	{
-		TD_GetApi(pTraderApi)->ReqQryInvestorPosition(NULL==szInstrumentId?"":szInstrumentId);
+		return TD_GetApi(pTraderApi)->ReqQryInvestorPosition(NULL==szInstrumentId?"":szInstrumentId);
 	}
+	return NULL_ERROR;
 }
 
-QUANTBOXC2CTP_API void __stdcall TD_ReqQryInvestorPositionDetail(void* pTraderApi,const char* szInstrumentId)
+QUANTBOXC2CTP_API int __stdcall TD_ReqQryInvestorPositionDetail(void* pTraderApi,const char* szInstrumentId)
 {
 	if(pTraderApi)
 	{
-		TD_GetApi(pTraderApi)->ReqQryInvestorPositionDetail(NULL==szInstrumentId?"":szInstrumentId);
+		return TD_GetApi(pTraderApi)->ReqQryInvestorPositionDetail(NULL==szInstrumentId?"":szInstrumentId);
 	}
+	return NULL_ERROR;
 }
 
-QUANTBOXC2CTP_API void __stdcall TD_ReqQryTradingAccount(void* pTraderApi)
+QUANTBOXC2CTP_API int __stdcall TD_ReqQryTradingAccount(void* pTraderApi)
 {
 	if(pTraderApi)
 	{
-		TD_GetApi(pTraderApi)->ReqQryTradingAccount();
+		return TD_GetApi(pTraderApi)->ReqQryTradingAccount();
 	}
+	return NULL_ERROR;
 }
 
-QUANTBOXC2CTP_API void __stdcall TD_ReqQryInstrument(void* pTraderApi,const char* szInstrumentId)
+QUANTBOXC2CTP_API int __stdcall TD_ReqQryInstrument(void* pTraderApi,const char* szInstrumentId)
 {
 	if(pTraderApi)
 	{
-		TD_GetApi(pTraderApi)->ReqQryInstrument(NULL==szInstrumentId?"":szInstrumentId);
+		return TD_GetApi(pTraderApi)->ReqQryInstrument(NULL==szInstrumentId?"":szInstrumentId);
 	}
+	return NULL_ERROR;
 }
 
-QUANTBOXC2CTP_API void __stdcall TD_ReqQryInstrumentCommissionRate(void* pTraderApi,const char* szInstrumentId)
+QUANTBOXC2CTP_API int __stdcall TD_ReqQryInstrumentCommissionRate(void* pTraderApi,const char* szInstrumentId)
 {
 	if(pTraderApi)
 	{
-		TD_GetApi(pTraderApi)->ReqQryInstrumentCommissionRate(szInstrumentId);
+		return TD_GetApi(pTraderApi)->ReqQryInstrumentCommissionRate(szInstrumentId);
 	}
+	return NULL_ERROR;
 }
 
-QUANTBOXC2CTP_API void __stdcall TD_ReqQryInstrumentMarginRate(void* pTraderApi,const char* szInstrumentId,TThostFtdcHedgeFlagType HedgeFlag)
+QUANTBOXC2CTP_API int __stdcall TD_ReqQryInstrumentMarginRate(void* pTraderApi,const char* szInstrumentId,TThostFtdcHedgeFlagType HedgeFlag)
 {
 	if(pTraderApi)
 	{
-		TD_GetApi(pTraderApi)->ReqQryInstrumentMarginRate(szInstrumentId,HedgeFlag);
+		return TD_GetApi(pTraderApi)->ReqQryInstrumentMarginRate(szInstrumentId,HedgeFlag);
 	}
+	return NULL_ERROR;
 }
 
-QUANTBOXC2CTP_API void __stdcall TD_ReqQryDepthMarketData(void* pTraderApi,const char* szInstrumentId)
+QUANTBOXC2CTP_API int __stdcall TD_ReqQryDepthMarketData(void* pTraderApi,const char* szInstrumentId)
 {
 	if(pTraderApi)
 	{
-		TD_GetApi(pTraderApi)->ReqQryDepthMarketData(szInstrumentId);
+		return TD_GetApi(pTraderApi)->ReqQryDepthMarketData(szInstrumentId);
 	}
+	return NULL_ERROR;
+}
+
+int __stdcall TD_ReqQryOrder(void* pTraderApi, TThostFtdcBrokerIDType brokerID, TThostFtdcInvestorIDType investorID, TThostFtdcInstrumentIDType instrumentID, TThostFtdcExchangeIDType exchangeID, TThostFtdcOrderSysIDType orderSysID)
+{
+	if(pTraderApi)
+	{
+		return TD_GetApi(pTraderApi)->ReqQryOrder(brokerID, investorID, instrumentID, exchangeID, orderSysID);
+	}
+	return NULL_ERROR;
 }

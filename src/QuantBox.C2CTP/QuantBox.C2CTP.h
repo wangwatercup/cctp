@@ -22,6 +22,8 @@ extern "C" {
 //用于分隔输入的合列表，与前置机地址列表，所以不能出现“:”一类的
 #define _QUANTBOXC2CTP_SEPS_ ",;"
 
+#define NULL_ERROR -4
+
 //连接状态枚举
 enum ConnectionStatus
 {
@@ -88,16 +90,16 @@ QUANTBOXC2CTP_API void __stdcall CTP_RegOnRtnTrade(void* pMsgQueue,fnOnRtnTrade 
 
 //释放消息队列
 QUANTBOXC2CTP_API void __stdcall CTP_ReleaseMsgQueue(void* pMsgQueue);
-//清空消息队列内容
-QUANTBOXC2CTP_API void __stdcall CTP_ClearMsgQueue(void* pMsgQueue);
-
-//处理消息队列第一条记录
-QUANTBOXC2CTP_API bool __stdcall CTP_ProcessMsgQueue(void* pMsgQueue);
-//开启队列回调主动推送线程
-QUANTBOXC2CTP_API void __stdcall CTP_StartMsgQueue(void* pMsgQueue);
-//停止队列回调主动推送线程
-QUANTBOXC2CTP_API void __stdcall CTP_StopMsgQueue(void* pMsgQueue);
-//设置是否直接触发回调
+////清空消息队列内容
+//QUANTBOXC2CTP_API void __stdcall CTP_ClearMsgQueue(void* pMsgQueue);
+//
+////处理消息队列第一条记录
+//QUANTBOXC2CTP_API bool __stdcall CTP_ProcessMsgQueue(void* pMsgQueue);
+////开启队列回调主动推送线程
+//QUANTBOXC2CTP_API void __stdcall CTP_StartMsgQueue(void* pMsgQueue);
+////停止队列回调主动推送线程
+//QUANTBOXC2CTP_API void __stdcall CTP_StopMsgQueue(void* pMsgQueue);
+////设置是否直接触发回调
 //QUANTBOXC2CTP_API void __stdcall CTP_EmitDirectly(void* pMsgQueue,bool bDirect);
 
 //行情接口=======================================
@@ -116,9 +118,9 @@ QUANTBOXC2CTP_API void __stdcall MD_Connect(
 	const char* szPassword);
 
 //订阅合约，多个合约以“,”分隔，与证券统一调用接口，交易所参数目前无效
-QUANTBOXC2CTP_API void __stdcall MD_Subscribe(void* pMdUserApi,const char* szInstrumentIDs,const char* szExchageID);
+QUANTBOXC2CTP_API int __stdcall MD_Subscribe(void* pMdUserApi,const char* szInstrumentIDs,const char* szExchageID);
 //取消订阅，多个合约以“,”分隔，与证券统一调用接口，交易所参数目前无效
-QUANTBOXC2CTP_API void __stdcall MD_Unsubscribe(void* pMdUserApi,const char* szInstrumentIDs,const char* szExchageID);
+QUANTBOXC2CTP_API int __stdcall MD_Unsubscribe(void* pMdUserApi,const char* szInstrumentIDs,const char* szExchageID);
 //断开连接
 QUANTBOXC2CTP_API void __stdcall MD_Disconnect(void* pMdUserApi);
 //释放行情接口
@@ -153,29 +155,32 @@ QUANTBOXC2CTP_API int __stdcall TD_SendOrder(
 	TThostFtdcTimeConditionType TimeCondition,
 	TThostFtdcContingentConditionType ContingentCondition,
 	double StopPrice,
-	TThostFtdcVolumeConditionType VolumeCondition);
+	TThostFtdcVolumeConditionType VolumeCondition,
+	TThostFtdcOrderRefType	OrderRef);
 
 //撤单
-QUANTBOXC2CTP_API void __stdcall TD_CancelOrder(void* pTraderApi,CThostFtdcOrderField *pOrder);
+QUANTBOXC2CTP_API int __stdcall TD_CancelOrder(void* pTraderApi,TThostFtdcBrokerIDType brokerID, TThostFtdcInvestorIDType investorID, TThostFtdcOrderRefType orderRef, int frontID, int sessionID, TThostFtdcExchangeIDType exchangeID, TThostFtdcOrderSysIDType orderSysID, TThostFtdcInstrumentIDType instrumentID);
 
 //断开连接
 QUANTBOXC2CTP_API void __stdcall TD_Disconnect(void* pTraderApi);
 //释放行情接口
 QUANTBOXC2CTP_API void __stdcall TD_ReleaseTdApi(void* pTraderApi);
-//查综合持仓
-QUANTBOXC2CTP_API void __stdcall TD_ReqQryInvestorPosition(void* pTraderApi,const char* szInstrumentId);
-//查持仓明细
-QUANTBOXC2CTP_API void __stdcall TD_ReqQryInvestorPositionDetail(void* pTraderApi,const char* szInstrumentId);
-//查资金账号
-QUANTBOXC2CTP_API void __stdcall TD_ReqQryTradingAccount(void* pTraderApi);
-//查合约
-QUANTBOXC2CTP_API void __stdcall TD_ReqQryInstrument(void* pTraderApi,const char* szInstrumentId);
-//查手续费
-QUANTBOXC2CTP_API void __stdcall TD_ReqQryInstrumentCommissionRate(void* pTraderApi,const char* szInstrumentId);
-//查保证金
-QUANTBOXC2CTP_API void __stdcall TD_ReqQryInstrumentMarginRate(void* pTraderApi,const char* szInstrumentId,TThostFtdcHedgeFlagType HedgeFlag);
 //查深度行情
-QUANTBOXC2CTP_API void __stdcall TD_ReqQryDepthMarketData(void* pTraderApi,const char* szInstrumentId);
+QUANTBOXC2CTP_API int __stdcall TD_ReqQryDepthMarketData(void* pTraderApi,const char* szInstrumentId);
+//查综合持仓
+QUANTBOXC2CTP_API int __stdcall TD_ReqQryInvestorPosition(void* pTraderApi,const char* szInstrumentId);
+//查持仓明细
+QUANTBOXC2CTP_API int __stdcall TD_ReqQryInvestorPositionDetail(void* pTraderApi,const char* szInstrumentId);
+//查资金账号
+QUANTBOXC2CTP_API int __stdcall TD_ReqQryTradingAccount(void* pTraderApi);
+//查合约
+QUANTBOXC2CTP_API int __stdcall TD_ReqQryInstrument(void* pTraderApi,const char* szInstrumentId);
+//查手续费
+QUANTBOXC2CTP_API int __stdcall TD_ReqQryInstrumentCommissionRate(void* pTraderApi,const char* szInstrumentId);
+//查保证金
+QUANTBOXC2CTP_API int __stdcall TD_ReqQryInstrumentMarginRate(void* pTraderApi,const char* szInstrumentId,TThostFtdcHedgeFlagType HedgeFlag);
+//查询报单
+QUANTBOXC2CTP_API int __stdcall TD_ReqQryOrder(void* pTraderApi, TThostFtdcBrokerIDType brokerID, TThostFtdcInvestorIDType investorID, TThostFtdcInstrumentIDType instrumentID, TThostFtdcExchangeIDType exchangeID, TThostFtdcOrderSysIDType orderSysID);
 
 #ifdef __cplusplus
 }

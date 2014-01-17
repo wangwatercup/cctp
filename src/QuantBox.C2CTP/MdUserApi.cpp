@@ -100,10 +100,10 @@ void CMdUserApi::Connect(const string& szPath,
 	}
 }
 
-void CMdUserApi::ReqUserLogin()
+int CMdUserApi::ReqUserLogin()
 {
 	if (NULL == m_pApi)
-		return;
+		return NULL_ERROR;
 
 	CThostFtdcReqUserLoginField request = {0};
 	
@@ -112,10 +112,11 @@ void CMdUserApi::ReqUserLogin()
 	strncpy(request.Password, m_szPassword.c_str(),sizeof(TThostFtdcPasswordType));
 	
 	//只有这一处用到了m_nRequestID，没有必要每次重连m_nRequestID都从0开始
-	m_pApi->ReqUserLogin(&request,++m_nRequestID);
+	int result = m_pApi->ReqUserLogin(&request,++m_nRequestID);
 	m_status = E_logining;
 	if(m_msgQueue)
 		(*m_msgQueue->m_fnOnConnect)(this,NULL,m_status);
+	return result;
 }
 
 void CMdUserApi::Disconnect()
@@ -132,10 +133,10 @@ void CMdUserApi::Disconnect()
 	}
 }
 
-void CMdUserApi::Subscribe(const string& szInstrumentIDs)
+int CMdUserApi::Subscribe(const string& szInstrumentIDs)
 {
 	if(NULL == m_pApi)
-		return;
+		return NULL_ERROR;
 
 	vector<char*> vct;
 
@@ -157,6 +158,8 @@ void CMdUserApi::Subscribe(const string& szInstrumentIDs)
 		}
 		token = strtok( NULL, _QUANTBOXC2CTP_SEPS_);
 	}
+
+	int result = NULL_ERROR;
 	
 	if(vct.size()>0)
 	{
@@ -168,19 +171,21 @@ void CMdUserApi::Subscribe(const string& szInstrumentIDs)
 		}
 
 		//订阅
-		m_pApi->SubscribeMarketData(pArray,(int)vct.size());
+		result = m_pApi->SubscribeMarketData(pArray,(int)vct.size());
 
 		delete[] pArray;
 	}
 
 	//释放内存
 	delete[] buf;
+
+	return result;
 }
 
-void CMdUserApi::Subscribe(const set<string>& instrumentIDs)
+int CMdUserApi::Subscribe(const set<string>& instrumentIDs)
 {
 	if(NULL == m_pApi)
-		return;
+		return NULL_ERROR;
 
 	string szInstrumentIDs;
 	for(set<string>::iterator i=instrumentIDs.begin();i!=instrumentIDs.end();++i)
@@ -191,14 +196,15 @@ void CMdUserApi::Subscribe(const set<string>& instrumentIDs)
 
 	if (szInstrumentIDs.length()>1)
 	{
-		Subscribe(szInstrumentIDs);
+		return Subscribe(szInstrumentIDs);
 	}
+	return NULL_ERROR;
 }
 
-void CMdUserApi::Unsubscribe(const string& szInstrumentIDs)
+int CMdUserApi::Unsubscribe(const string& szInstrumentIDs)
 {
 	if(NULL == m_pApi)
-		return;
+		return NULL_ERROR;
 
 	vector<char*> vct;
 	size_t len = szInstrumentIDs.length()+1;
@@ -219,7 +225,7 @@ void CMdUserApi::Unsubscribe(const string& szInstrumentIDs)
 		}
 		token = strtok( NULL, _QUANTBOXC2CTP_SEPS_);
 	}
-	
+	int result = NULL_ERROR;
 	if(vct.size()>0)
 	{
 		//转成字符串数组
@@ -230,13 +236,15 @@ void CMdUserApi::Unsubscribe(const string& szInstrumentIDs)
 		}
 
 		//订阅
-		m_pApi->UnSubscribeMarketData(pArray,(int)vct.size());
+		result = m_pApi->UnSubscribeMarketData(pArray,(int)vct.size());
 
 		delete[] pArray;
 	}
 
 	//释放内存
 	delete[] buf;
+
+	return result;
 }
 
 void CMdUserApi::OnFrontConnected()
