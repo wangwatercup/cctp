@@ -489,7 +489,8 @@ int CTraderApi::ReqOrderInsert(
 	TThostFtdcTimeConditionType TimeCondition,
 	TThostFtdcContingentConditionType ContingentCondition,
 	TThostFtdcPriceType StopPrice,
-	TThostFtdcVolumeConditionType VolumeCondition)
+	TThostFtdcVolumeConditionType VolumeCondition,
+	TThostFtdcOrderRefType	OrderRef)
 {
 	if (NULL == m_pApi)
 		return 0;
@@ -531,16 +532,18 @@ int CTraderApi::ReqOrderInsert(
 	body.ContingentCondition = ContingentCondition;
 	body.StopPrice = StopPrice;
 
-	int nRet = 0;
+	//int nRet = 0;
 	{
 		//可能报单太快，m_nMaxOrderRef还没有改变就提交了
-		CLock cl(&m_csOrderRef);
+		/*CLock cl(&m_csOrderRef);
 
 		nRet = m_nMaxOrderRef;
 		sprintf(body.OrderRef,"%d",nRet);
-		++m_nMaxOrderRef;
+		++m_nMaxOrderRef;*/
 
 		//不保存到队列，而是直接发送
+		strncpy(body.OrderRef, OrderRef, sizeof(TThostFtdcOrderRefType));
+
 		long lRequest = InterlockedIncrement(&m_lRequestID);
 		return m_pApi->ReqOrderInsert(&body,lRequest);
 	}
@@ -548,7 +551,7 @@ int CTraderApi::ReqOrderInsert(
 
 	//如何定位报单，用报单引用实际上并不靠谱
 	//如重新开软件、条件单，同时别的软件下单三个可能性要处理
-	return nRet;
+	//return nRet;
 }
 
 void CTraderApi::OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)

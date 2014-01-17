@@ -355,7 +355,8 @@ QUANTBOXC2CTP_API int __stdcall TD_SendOrder(
 	TThostFtdcTimeConditionType TimeCondition,
 	TThostFtdcContingentConditionType ContingentCondition,
 	double StopPrice,
-	TThostFtdcVolumeConditionType VolumeCondition)
+	TThostFtdcVolumeConditionType VolumeCondition,
+	TThostFtdcOrderRefType	OrderRef)
 {
 	if(pTraderApi
 		&&szInstrument
@@ -372,7 +373,8 @@ QUANTBOXC2CTP_API int __stdcall TD_SendOrder(
 			TimeCondition,
 			ContingentCondition,
 			StopPrice,
-			VolumeCondition);
+			VolumeCondition,
+			OrderRef);
 	}
 	return NULL_ERROR;
 }
