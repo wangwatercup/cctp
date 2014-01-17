@@ -8,7 +8,9 @@
 *.out
 *.app
 *.exp
+*.idb
 *.lik
+*.log
 *.obj
 *.opensdf
 *.pch
