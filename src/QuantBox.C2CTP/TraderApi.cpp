@@ -573,14 +573,36 @@ void CTraderApi::OnRtnTrade(CThostFtdcTradeField *pTrade)
 		(*m_msgQueue->m_fnOnRtnTrade)(this,pTrade);
 }
 
-int CTraderApi::ReqOrderAction(CThostFtdcInputOrderActionField *body)
+int CTraderApi::ReqOrderAction(TThostFtdcBrokerIDType brokerID, TThostFtdcInvestorIDType investorID, TThostFtdcOrderRefType orderRef, int frontID, int sessionID, TThostFtdcExchangeIDType exchangeID, TThostFtdcOrderSysIDType orderSysID, TThostFtdcInstrumentIDType instrumentID)
 {
     if (NULL == m_pApi)
             return NULL_ERROR;
-              
+    
+	CThostFtdcInputOrderActionField body;
+
+	memset(&body,0,sizeof(body));
+	///经纪公司代码
+	strncpy(body.BrokerID, brokerID,sizeof(TThostFtdcBrokerIDType));
+	///投资者代码
+	strncpy(body.InvestorID, investorID,sizeof(TThostFtdcInvestorIDType));
+	///报单引用
+	strncpy(body.OrderRef, orderRef,sizeof(TThostFtdcOrderRefType));
+	///前置编号
+	body.FrontID = frontID;
+	///会话编号
+	body.SessionID = sessionID;
+	///交易所代码
+	strncpy(body.ExchangeID,exchangeID,sizeof(TThostFtdcExchangeIDType));
+	///报单编号
+	strncpy(body.OrderSysID,orderSysID,sizeof(TThostFtdcOrderSysIDType));
+	///操作标志
+	body.ActionFlag = THOST_FTDC_AF_Delete;
+	///合约代码
+	strncpy(body.InstrumentID, instrumentID,sizeof(TThostFtdcInstrumentIDType));    
+
     long lRequest = InterlockedIncrement(&m_lRequestID);
 
-   return m_pApi->ReqOrderAction(body,lRequest);
+   return m_pApi->ReqOrderAction(&body,lRequest);
    
 	//	ofstream myfile;
 	//myfile.open (".\\logs\\log_cancel_order.txt", std::ofstream::out | std::ofstream::app);
@@ -784,6 +806,28 @@ int CTraderApi::ReqQryInstrumentMarginRate(const string& szInstrumentId,TThostFt
 	body.HedgeFlag = HedgeFlag;
 	long lRequest = InterlockedIncrement(&m_lRequestID);
 	return m_pApi->ReqQryInstrumentMarginRate(&body,lRequest);
+}
+
+
+int CTraderApi::ReqQryOrder(TThostFtdcBrokerIDType brokerID, TThostFtdcInvestorIDType investorID, TThostFtdcInstrumentIDType instrumentID, TThostFtdcExchangeIDType exchangeID, TThostFtdcOrderSysIDType orderSysID)
+{
+	if (NULL == m_pApi)
+		return NULL_ERROR;
+	
+	CThostFtdcQryOrderField body;
+	memset(&body,0,sizeof(body));
+	
+	///经纪公司代码
+	strncpy(body.BrokerID, brokerID,sizeof(TThostFtdcBrokerIDType));
+	///投资者代码
+	strncpy(body.InvestorID, investorID,sizeof(TThostFtdcInvestorIDType));
+	///交易所代码
+	strncpy(body.ExchangeID,exchangeID,sizeof(TThostFtdcExchangeIDType));
+	///报单编号
+	strncpy(body.OrderSysID, orderSysID,sizeof(TThostFtdcOrderSysIDType));
+
+	long lRequest = InterlockedIncrement(&m_lRequestID);
+	return m_pApi->ReqQryOrder(&body,lRequest);
 }
 
 void CTraderApi::OnRspQryInstrumentMarginRate(CThostFtdcInstrumentMarginRateField *pInstrumentMarginRate, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)

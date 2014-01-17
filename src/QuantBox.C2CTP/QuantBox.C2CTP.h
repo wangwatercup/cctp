@@ -165,6 +165,8 @@ QUANTBOXC2CTP_API int __stdcall TD_CancelOrder(void* pTraderApi,TThostFtdcBroker
 QUANTBOXC2CTP_API void __stdcall TD_Disconnect(void* pTraderApi);
 //释放行情接口
 QUANTBOXC2CTP_API void __stdcall TD_ReleaseTdApi(void* pTraderApi);
+//查深度行情
+QUANTBOXC2CTP_API int __stdcall TD_ReqQryDepthMarketData(void* pTraderApi,const char* szInstrumentId);
 //查综合持仓
 QUANTBOXC2CTP_API int __stdcall TD_ReqQryInvestorPosition(void* pTraderApi,const char* szInstrumentId);
 //查持仓明细
@@ -177,8 +179,8 @@ QUANTBOXC2CTP_API int __stdcall TD_ReqQryInstrument(void* pTraderApi,const char*
 QUANTBOXC2CTP_API int __stdcall TD_ReqQryInstrumentCommissionRate(void* pTraderApi,const char* szInstrumentId);
 //查保证金
 QUANTBOXC2CTP_API int __stdcall TD_ReqQryInstrumentMarginRate(void* pTraderApi,const char* szInstrumentId,TThostFtdcHedgeFlagType HedgeFlag);
-//查深度行情
-QUANTBOXC2CTP_API int __stdcall TD_ReqQryDepthMarketData(void* pTraderApi,const char* szInstrumentId);
+//查询报单
+QUANTBOXC2CTP_API int __stdcall TD_ReqQryOrder(void* pTraderApi, TThostFtdcBrokerIDType brokerID, TThostFtdcInvestorIDType investorID, TThostFtdcInstrumentIDType instrumentID, TThostFtdcExchangeIDType exchangeID, TThostFtdcOrderSysIDType orderSysID);
 
 #ifdef __cplusplus
 }

@@ -383,30 +383,8 @@ QUANTBOXC2CTP_API int __stdcall TD_SendOrder(
 QUANTBOXC2CTP_API int __stdcall TD_CancelOrder(void* pTraderApi,TThostFtdcBrokerIDType brokerID, TThostFtdcInvestorIDType investorID, TThostFtdcOrderRefType orderRef, int frontID, int sessionID, TThostFtdcExchangeIDType exchangeID, TThostFtdcOrderSysIDType orderSysID, TThostFtdcInstrumentIDType instrumentID)
 {
 	if(pTraderApi)
-	{
-		CThostFtdcInputOrderActionField body;
-
-		memset(&body,0,sizeof(body));
-		///经纪公司代码
-		strncpy(body.BrokerID, brokerID,sizeof(TThostFtdcBrokerIDType));
-		///投资者代码
-		strncpy(body.InvestorID, investorID,sizeof(TThostFtdcInvestorIDType));
-		///报单引用
-		strncpy(body.OrderRef, orderRef,sizeof(TThostFtdcOrderRefType));
-		///前置编号
-		body.FrontID = frontID;
-		///会话编号
-		body.SessionID = sessionID;
-		///交易所代码
-		strncpy(body.ExchangeID,exchangeID,sizeof(TThostFtdcExchangeIDType));
-		///报单编号
-		strncpy(body.OrderSysID,orderSysID,sizeof(TThostFtdcOrderSysIDType));
-		///操作标志
-		body.ActionFlag = THOST_FTDC_AF_Delete;
-		///合约代码
-		strncpy(body.InstrumentID, instrumentID,sizeof(TThostFtdcInstrumentIDType));
-	
-		return TD_GetApi(pTraderApi)->ReqOrderAction(&body);
+	{	
+		return TD_GetApi(pTraderApi)->ReqOrderAction(brokerID, investorID, orderRef, frontID, sessionID, exchangeID, orderSysID, instrumentID);
 	}
 	return NULL_ERROR;
 }
@@ -486,6 +464,15 @@ QUANTBOXC2CTP_API int __stdcall TD_ReqQryDepthMarketData(void* pTraderApi,const 
 	if(pTraderApi)
 	{
 		return TD_GetApi(pTraderApi)->ReqQryDepthMarketData(szInstrumentId);
+	}
+	return NULL_ERROR;
+}
+
+int __stdcall TD_ReqQryOrder(void* pTraderApi, TThostFtdcBrokerIDType brokerID, TThostFtdcInvestorIDType investorID, TThostFtdcInstrumentIDType instrumentID, TThostFtdcExchangeIDType exchangeID, TThostFtdcOrderSysIDType orderSysID)
+{
+	if(pTraderApi)
+	{
+		return TD_GetApi(pTraderApi)->ReqQryOrder(brokerID, investorID, instrumentID, exchangeID, orderSysID);
 	}
 	return NULL_ERROR;
 }
